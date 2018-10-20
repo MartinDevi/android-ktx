@@ -22,6 +22,8 @@ import android.support.test.InstrumentationRegistry
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewParent
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import androidx.core.ktx.test.R
@@ -36,6 +38,31 @@ import org.junit.Test
 class ViewTest {
     private val context = InstrumentationRegistry.getContext()
     private val view = View(context)
+
+    @Test
+    fun ancestors_root() {
+        val actual = view.ancestors.toList()
+
+        val expected = emptyList<ViewParent>()
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun ancestors() {
+        val parents = listOf(
+                FrameLayout(context),
+                LinearLayout(context),
+                RelativeLayout(context)
+        )
+        for ((parent, child) in parents.zipWithNext()) {
+            parent.addView(child)
+        }
+        parents.last().addView(view)
+
+        val expected = parents.reversed()
+        val actual = view.ancestors.toList()
+        assertEquals(expected, actual)
+    }
 
     @Test
     fun doOnNextLayout() {

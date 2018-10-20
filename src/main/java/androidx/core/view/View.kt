@@ -21,12 +21,19 @@ package androidx.core.view
 import android.graphics.Bitmap
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewParent
 import android.view.ViewTreeObserver
 import android.view.accessibility.AccessibilityEvent
 import androidx.annotation.Px
 import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.core.graphics.applyCanvas
+
+/**
+ * Returns a [Sequence] walking up this view's [parent][View.getParent] hierarchy chain.
+ */
+val View.ancestors: Sequence<ViewParent>
+    get() = generateSequence(parent, ViewParent::getParent)
 
 /**
  * Performs the given action when this view is next laid out.
